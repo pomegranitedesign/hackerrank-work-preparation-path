@@ -12,30 +12,25 @@
  *
  */
 
-const checkMagazine = (magazine = [], note = []) => {
-  const magazineOccurences = getOccurences(magazine)
-  const noteOccurences = getOccurences(note)
+const fs = require('fs')
 
-  for (let magazineWord in magazineOccurences) {
-    for (let noteWord in noteOccurences) {
-      if (
-        magazineOccurences[magazineWord] < noteOccurences[noteWord] ||
-        !magazine.includes(noteWord)
-      )
-        return 'No'
-    }
+const checkMagazine = (magazine = [], note = []) => {
+  if (
+    note.some((word) => !magazine.includes(word)) ||
+    note.length > magazine.length
+  )
+    return 'No'
+
+  const magazineOccurences = {}
+  for (let word of magazine)
+    magazineOccurences[word] = (magazineOccurences[word] || 0) + 1
+
+  for (let word of note) {
+    if (!magazineOccurences[word] || magazineOccurences[word] < 1) return 'No'
+    magazineOccurences[word] -= 1
   }
 
   return 'Yes'
-}
-
-const getOccurences = (str = '') => {
-  const output = {}
-  for (let word of str) {
-    if (!output[word]) output[word] = 1
-    else output[word] += 1
-  }
-  return output
 }
 
 console.log(
@@ -43,18 +38,29 @@ console.log(
     ['give', 'me', 'one', 'grand', 'today', 'night'],
     ['give', 'one', 'grand', 'today']
   )
-) // Yes
+)
+// Yes
 
 console.log(
   checkMagazine(
     ['two', 'times', 'three', 'is', 'not', 'four'],
     ['two', 'times', 'two', 'is', 'four']
   )
-) // No
+)
+// No
 
 console.log(
   checkMagazine(
     ['ive', 'got', 'a', 'lovely', 'bunch', 'of', 'coconuts'],
     ['ive', 'got', 'some', 'coconuts']
   )
-) // No
+)
+// No
+
+console.log(
+  checkMagazine(
+    ['ive', 'got', 'a', 'lovely', 'bunch', 'of', 'coconuts'],
+    ['ive', 'got', 'some', 'coconuts']
+  )
+)
+// No
