@@ -13,23 +13,41 @@ const sherlockAndAnagrams = (s = '') => {
   const output = []
   let totalAnagrams = 0
 
-  // Find all single characters
-  const sorted = s.split('').sort().join('')
-  for (let i = 0; i < sorted.length; i++)
-    if (sorted[i] === sorted[i + 1]) {
-      output.push([i, i + 1])
-      totalAnagrams++
-    }
+  const singles = []
+  for (let i = 0; i < s.length; i++)
+    for (let j = i + 1; j < s.length; j++)
+      if (s[i] === s[j]) {
+        singles.push([s[i], s[j]])
+        output.push([i, j])
+        totalAnagrams++
+      }
 
-  // Start looking for length 2 matches
   const doubles = []
   for (let i = 0; i < s.length - 1; i++) {
-    // Check if the pair index combination (e.g. [1, 2] or [4, 5]) are not in output array
-    // if not then add this pair into output
-    for (let j = i + 2; j < s.length; j++) {}
+    for (let j = i + 1; j < s.length; j++) {
+      const letterPair = [s[i], s[j]]
+      const indexPair = [i, j]
+
+      if (letterPair[0] === letterPair[1]) {
+        if (!output.some((pair) => pair.toString() === indexPair.toString())) {
+          output.push(indexPair)
+          doubles.push(letterPair)
+          totalAnagrams++
+        }
+      }
+    }
   }
 
   // Start looking for length 3 matches
+  const triples = []
+  for (let i = 0; i < s.length; s++) {
+    const leftSide = s.slice(i, i + 3)
+    for (let j = 3; j < s.length; j++) {
+      const rightSide = s.slice(j, j + 3)
+
+      console.log(leftSide, rightSide)
+    }
+  }
   console.log(output)
 
   return `${totalAnagrams}\n\n`
