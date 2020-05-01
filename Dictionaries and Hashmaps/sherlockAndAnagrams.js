@@ -24,36 +24,56 @@ const sherlockAndAnagrams = (s = '') => {
 
   const doubles = []
   for (let i = 0; i < s.length - 1; i++) {
-    for (let j = i + 1; j < s.length; j++) {
-      const letterPair = [s[i], s[j]]
-      const indexPair = [i, j]
+    for (let j = 0; j < s.length - 1; j++) {
+      const leftSideIndex = [j, j + 2]
+      const leftSide = (s[j] + s[j + 1]).split('').sort().join('')
 
-      if (letterPair[0] === letterPair[1]) {
-        if (!output.some((pair) => pair.toString() === indexPair.toString())) {
-          output.push(indexPair)
-          doubles.push(letterPair)
+      const rightSideIndex = [j + 1, j + 3]
+      const rightSide = (s[j + 1] + s[j + 2]).split('').sort().join('')
+
+      const pairSides = [leftSideIndex, rightSideIndex]
+      if (leftSide === rightSide) {
+        if (!doubles.some((pair) => pair.toString() === pairSides.toString())) {
+          doubles.push(pairSides)
+          output.push([leftSideIndex, rightSideIndex].join(', '))
           totalAnagrams++
         }
       }
     }
   }
 
-  // Start looking for length 3 matches
   const triples = []
-  for (let i = 0; i < s.length; s++) {
-    const leftSide = s.slice(i, i + 3)
-    for (let j = 3; j < s.length; j++) {
-      const rightSide = s.slice(j, j + 3)
+  for (let i = 0; i < s.length - 1; s++) {
+    for (let j = 0; j < s.length - i; j++) {
+      const leftSideIndex = [j, j + 3]
+      const leftSide = s
+        .slice(j, j + 3)
+        .split('')
+        .sort()
+        .join('')
 
-      console.log(leftSide, rightSide)
+      const rightSideIndex = [j + 1, j + 4]
+      const rightSide = s
+        .slice(j + 1, j + 4)
+        .split('')
+        .sort()
+        .join('')
+
+      if (leftSide.length === 3 && rightSide.length === 3) {
+        if (leftSide === rightSide) {
+          output.push([leftSideIndex, rightSideIndex])
+          triples.push([leftSide, rightSide].join(''))
+          totalAnagrams++
+        }
+      }
     }
   }
-  console.log(output)
 
+  console.log(output)
   return `${totalAnagrams}\n\n`
 }
 
-// console.log(sherlockAndAnagrams('mom')) // 3
+console.log(sherlockAndAnagrams('mom')) // 3
 console.log(sherlockAndAnagrams('abba')) // 4
 console.log(sherlockAndAnagrams('abcd')) // 0
 console.log(sherlockAndAnagrams('ifailuhkqq')) // 3
