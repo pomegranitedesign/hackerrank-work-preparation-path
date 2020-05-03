@@ -10,71 +10,35 @@
  */
 
 const sherlockAndAnagrams = (s = '') => {
-  const output = []
-  let totalAnagrams = 0
+	const substrings = []
+	for (let stringLength = 0; stringLength < s.length; stringLength++)
+		for (let k = 0; k <= s.length - stringLength; k++) {
+			substrings[stringLength] = substrings[stringLength] || []
+			if (s.slice(k, k + stringLength) !== '') substrings[stringLength].push(s.slice(k, k + stringLength))
+		}
 
-  const singles = []
-  for (let i = 0; i < s.length; i++)
-    for (let j = i + 1; j < s.length; j++)
-      if (s[i] === s[j]) {
-        singles.push([s[i], s[j]])
-        output.push([i, j])
-        totalAnagrams++
-      }
-
-  const doubles = []
-  for (let i = 0; i < s.length - 1; i++) {
-    for (let j = 0; j < s.length - 1; j++) {
-      const leftSideIndex = [j, j + 2]
-      const leftSide = (s[j] + s[j + 1]).split('').sort().join('')
-
-      const rightSideIndex = [j + 1, j + 3]
-      const rightSide = (s[j + 1] + s[j + 2]).split('').sort().join('')
-
-      const pairSides = [leftSideIndex, rightSideIndex]
-      if (leftSide === rightSide) {
-        if (!doubles.some((pair) => pair.toString() === pairSides.toString())) {
-          doubles.push(pairSides)
-          output.push([leftSideIndex, rightSideIndex].join(', '))
-          totalAnagrams++
-        }
-      }
-    }
-  }
-
-  const triples = []
-  for (let i = 0; i < s.length - 1; s++) {
-    for (let j = 0; j < s.length - i; j++) {
-      const leftSideIndex = [j, j + 3]
-      const leftSide = s
-        .slice(j, j + 3)
-        .split('')
-        .sort()
-        .join('')
-
-      const rightSideIndex = [j + 1, j + 4]
-      const rightSide = s
-        .slice(j + 1, j + 4)
-        .split('')
-        .sort()
-        .join('')
-
-      if (leftSide.length === 3 && rightSide.length === 3) {
-        if (leftSide === rightSide) {
-          output.push([leftSideIndex, rightSideIndex])
-          triples.push([leftSide, rightSide].join(''))
-          totalAnagrams++
-        }
-      }
-    }
-  }
-
-  console.log(output)
-  return `${totalAnagrams}\n\n`
+	let totalAnagrams = 0
+	substrings.forEach((strings) => {
+		for (let i = 0; i < strings.length; i++) {
+			for (let k = i + 1; k < strings.length; k++) if (checkAnagram(strings[i], strings[k])) totalAnagrams++
+		}
+	})
+	return totalAnagrams
 }
 
-console.log(sherlockAndAnagrams('mom')) // 3
+const checkAnagram = (a = '', b = '') => {
+	const letters = {}
+	for (let i = 0; i < a.length; i++) letters[a[i]] = (letters[a[i]] || 0) + 1
+	for (let i = 0; i < b.length; i++) {
+		letters[b[i]] = (letters[b[i]] || 0) - 1
+
+		if (letters[b[i]] < 0) return false
+	}
+	return true
+}
+
+// console.log(sherlockAndAnagrams('mom')) // 2
 console.log(sherlockAndAnagrams('abba')) // 4
 console.log(sherlockAndAnagrams('abcd')) // 0
-console.log(sherlockAndAnagrams('ifailuhkqq')) // 3
 console.log(sherlockAndAnagrams('kkkk')) // 10
+// console.log(sherlockAndAnagrams('ifailuhkqq')) // 3
