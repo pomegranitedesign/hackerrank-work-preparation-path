@@ -15,11 +15,28 @@
  *  In short, when sorting in ascending order, a comparator function returns -1 if a < b, 0 if a === b , 1 and a > b if .
  * 
  */
+package Comparator;
+import java.util.Comparator;
 
-class Checker {
-	constructor() {}
+class Player {
+	String name;
+	int score;
 
-	comparator(playerA, playerB) {}
+	Player(String name, int score) {
+		this.name = name;
+		this.score = score;
+	}
 }
 
-console.log()
+class Checker implements Comparator<Player> {
+	public int compare(Player a , Player b) {
+		if (a.score > b.score) return -1;
+		else if (a.score < b.score) return 1;
+		else if (a.score == b.score) {
+			if (a.name.compareTo(b.name) < 0) return -1;
+			else if (a.name.compareTo(b.name) > 0) return 1;
+		}
+		return 0;
+	}
+}
+
