@@ -18,9 +18,7 @@ const fs = require('fs')
 const activityNotifications = (expenditures = [], d = 0) => {
 	let nNotifications = 0
 
-	const trailingDays = expenditures.slice(0, d)
-	trailingDays.sort(compareN)
-
+	const trailingDays = expenditures.slice(0, d).sort(compareN)
 	for (let i = d; i < expenditures.length; i++) {
 		const median = getMedian(trailingDays)
 		if (median <= expenditures[i]) nNotifications++
@@ -36,7 +34,7 @@ const getMedian = (arr = []) => {
 	else return arr[arr.length / 2] + arr[arr.length / 2 - 1]
 }
 
-const change = (arr = [], from, to) => {
+const change = (arr = [], from = 0, to = 0) => {
 	if (from === to) return
 
 	let i = arr.indexOf(from)
