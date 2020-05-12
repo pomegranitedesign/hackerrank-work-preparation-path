@@ -14,35 +14,52 @@
  * 
  */
 
-const countInversions = (arr = []) => {
-	if (checkSorted(arr)) return 0
+const countInversions = (arr = []) => sortAndCount(arr).count
 
-	let nSwaps = 0
-	const middleIndex = Math.floor(arr.length / 2)
-	const left = arr.slice(0, middleIndex)
-	const right = arr.slice(middleIndex, arr.length)
+const sortAndCount = (arr = []) => {
+	let left, right, mergeOut, leftSort, rightSort
+	if (arr.length < 2) {
+		return {
+			count: 0,
+			list: arr
+		}
+	}
 
+	left = arr.slice(0, Math.floor(arr.length / 2))
+	right = arr.slice(Math.floor(arr.length / 2), arr.length)
 
+	leftSort = sortAndCount(left)
+	rightSort = sortAndCount(right)
+	mergeOut = mergeAndCount(leftSort.list, rightSort.list)
+
+	return {
+		count: leftSort.count + rightSort.count + mergeOut.count,
+		list: mergeOut.list
+	}
 }
 
-const checkSorted = (arr = []) => {
-	for (let i = 0; i < arr.length; i++) if (arr[i] > arr[i + 1]) return false
-	return true
-
-const merge = (a = [], b = []) => {
+const mergeAndCount = (a = [], b = []) => {
+	let count = 0
 	let result = []
 
 	while (a.length && b.length) {
-		const smallest = a[0] < b[0] ? a.shift() : b.shift()
-		result.push(smallest)
+		result.push(Math.min(a[0], b[0]))
+		if (b[0] < a[0]) {
+			count += a.length
+			b.shift()
+		} else a.shift()
 	}
 
 	result = a.length ? result.concat(a) : result.concat(b)
-	return result
+
+	return {
+		count,
+		list: result
+	}
 }
 
-// console.log(countInversions([ 1, 1, 1, 2, 2 ])) // 0
+console.log(countInversions([ 1, 1, 1, 2, 2 ])) // 0
 console.log(countInversions([ 2, 1, 3, 1, 2 ])) // 4
 console.log(countInversions([ 2, 4, 1 ])) // 2
-// console.log(countInversions([ 1, 5, 3, 7 ])) // 1
-// console.log(countInversions([ 7, 5, 3, 1 ])) // 6
+console.log(countInversions([ 1, 5, 3, 7 ])) // 1
+console.log(countInversions([ 7, 5, 3, 1 ])) // 6
