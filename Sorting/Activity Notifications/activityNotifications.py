@@ -1,3 +1,6 @@
+import bisect
+import statistics
+
 def activityNotifications(expenditure, d):
     arr = sorted(expenditure[0:d])
     m = d // 2
