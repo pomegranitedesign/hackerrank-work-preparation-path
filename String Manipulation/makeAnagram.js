@@ -13,36 +13,45 @@
  */
 
 const makeAnagram = (a = '', b = '') => {
-	const sortedA = [ ...a ].sort()
-	const sortedB = [ ...b ].sort()
+	const aOccurences = countOccurences(a)
+	const bOccurences = countOccurences(b)
 
-	let c = 0
-	if (sortedA.length < sortedB.length)
-		while (sortedA.length !== sortedB.length) sortedA.push('')
-	else if (sortedB.length < sortedA.length)
-		while (sortedB.length !== sortedA.length) sortedB.push('')
+	const aCount = countCharsToRemove(aOccurences, bOccurences)
+	const bCount = countCharsToRemove(bOccurences, aOccurences)
 
-	for (let i = 0; i < sortedA.length; i++) {
-		if (sortedA[i] !== sortedB[i]) c++
-		console.log(sortedA[i], sortedB[i])
-	}
-
-	return [
-		sortedA.filter((char) => char !== ''),
-		sortedB.filter((char) => char !== '')
-	]
+	return aCount + bCount
 }
 
-const isAnagram = (a = '', b = '') => a === b
+const countCharsToRemove = (a = {}, b = {}) => {
+	let nRemoved = 0
+	for (var k in a) {
+		if (a.hasOwnProperty(k)) {
+			if (a[k] && b[k]) {
+				if (a[k] > b[k]) {
+					nRemoved += a[k] - b[k]
+					a[k] = b[k]
+				}
+			} else nRemoved += a[k]
+		}
+	}
+	return nRemoved
+}
+
+const countOccurences = (str = '') => {
+	const occurences = {}
+	for (let i = 0; i < str.length; i++)
+		occurences[str[i]] = (occurences[str[i]] || 0) + 1
+	return occurences
+}
 
 console.log(makeAnagram('cde', 'abc')) // 4
 console.log(makeAnagram('cde', 'dcf')) // 2
 console.log(
-	makeAnagram('fcrxzwscanmligyxyvym', 'jxwtrhvujlmrpdoqbisbwhmgpmeoke') // 30
-)
-console.log(
-	makeAnagram(
-		'bugexikjevtubidpulaelsbcqlupwetzyzdvjphn',
-		'lajoipfecfinxjspxmevqxuqyalhrsxcvgsdxxkacspbchrbvvwnvsdtsrdk'
-	)
-) // 40
+	makeAnagram('fcrxzwscanmligyxyvym', 'jxwtrhvujlmrpdoqbisbwhmgpmeoke')
+) // 30
+// console.log(
+// 	makeAnagram(
+// 		'bugexikjevtubidpulaelsbcqlupwetzyzdvjphn',
+// 		'lajoipfecfinxjspxmevqxuqyalhrsxcvgsdxxkacspbchrbvvwnvsdtsrdk'
+// 	)
+// ) // 40
