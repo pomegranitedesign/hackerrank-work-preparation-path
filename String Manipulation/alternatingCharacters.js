@@ -14,9 +14,19 @@
  */
 
 const alternatingCharacters = (s = '') => {
-	return s
+	let nRemoved = 0
+	let i = 0
+
+	const splitted = [ ...s ]
+	let currentCharacter = splitted[i]
+	for (i = 1; i < splitted.length; i++)
+		if (splitted[i] === currentCharacter) nRemoved++
+		else currentCharacter = splitted[i]
+
+	return nRemoved
 }
 
+console.log(alternatingCharacters('AABAAB')) // 2
 console.log(alternatingCharacters('AAAA')) // 3
 console.log(alternatingCharacters('BBBBB')) // 4
 console.log(alternatingCharacters('ABABABAB')) // 0
