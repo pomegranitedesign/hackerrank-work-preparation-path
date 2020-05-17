@@ -15,48 +15,35 @@
  *  
  */
 
-const isValid = (s = '') => {
+const isValid = (string = '') => {
 	const occurences = {}
-	for (let i = 0; i < s.length; i++) {
-		if (!occurences[s[i]]) {
-			occurences[s[i]] = {}
-			occurences[s[i]].occured = 1
-			occurences[s[i]].removed = 0
-		} else occurences[s[i]].occured += 1
+	for (let i = 0; i < string.length; i++) {
+		if (!occurences[string[i]]) occurences[string[i]] = 1
+		else occurences[string[i]]++
 	}
 
-	const flattened = flatten(occurences, 'occured')
-	const mode = Math.max(...getMode(flattened))
-	for (let occurence in occurences) {
-		if (occurences[occurence].occured > mode) {
-			while (occurences[occurence].occured !== mode) {
-				occurences[occurence].occured--
-				occurences[occurence].removed++
+	let nRemoved = 0
+	const mode = Math.max(...getMode(Object.values(occurences)))
+	for (let char in occurences) {
+		if (occurences[char] > mode) {
+			while (occurences[char] > mode) {
+				occurences[char]--
+				nRemoved++
 			}
 		}
 
-		if (occurences[occurence].occured < mode) {
-			while (occurences[occurence].occured !== mode) {
-				occurences[occurence].occured++
-				occurences[occurence].removed++
+		if (occurences[char] < mode) {
+			while (occurences[char] !== 0) {
+				occurences[char]--
+				nRemoved++
 			}
 		}
 	}
 
-	const anyRemovedMoreThan2 =
-		flatten(occurences, 'removed').reduce(sum, 0) >= 2
-	return anyRemovedMoreThan2 ? 'NO' : 'YES'
+	return nRemoved > 1 ? 'NO' : 'YES'
 }
 
-const sum = (a, b) => a + b
-
-const flatten = (obj = {}, key = '') =>
-	Object.entries(Object.values(obj)).map((val) => val[1][key])
-
 const getMode = (numbers) => {
-	// as result can be bimodal or multi-modal,
-	// the returned result is provided as an array
-	// mode of [3, 5, 4, 4, 1, 1, 2, 3] = [1, 3, 4]
 	let modes = [],
 		count = [],
 		i,
@@ -81,11 +68,11 @@ const getMode = (numbers) => {
 	return modes
 }
 
-// console.log(isValid('aabbcd')) // NO
-// console.log(isValid('aabbccddeefghi')) // NO
-// console.log(isValid('abcdefghhgfedecba')) // YES
-// console.log(isValid('aaaabbcc')) // NO
-// console.log(isValid('aaaaabc')) // NO
+console.log(isValid('aabbcd')) // NO
+console.log(isValid('aabbccddeefghi')) // NO
+console.log(isValid('abcdefghhgfedecba')) // YES
+console.log(isValid('aaaabbcc')) // NO
+console.log(isValid('aaaaabc')) // NO
 console.log(
 	isValid(
 		'ibfdgaeadiaefgbhbdghhhbgdfgeiccbiehhfcggchgghadhdhagfbahhddgghbdehidbibaeaagaeeigffcebfbaieggabcfbiiedcabfihchdfabifahcbhagccbdfifhghcadfiadeeaheeddddiecaicbgigccageicehfdhdgafaddhffadigfhhcaedcedecafeacbdacgfgfeeibgaiffdehigebhhehiaahfidibccdcdagifgaihacihadecgifihbebffebdfbchbgigeccahgihbcbcaggebaaafgfedbfgagfediddghdgbgehhhifhgcedechahidcbchebheihaadbbbiaiccededchdagfhccfdefigfibifabeiaccghcegfbcghaefifbachebaacbhbfgfddeceababbacgffbagidebeadfihaefefegbghgddbbgddeehgfbhafbccidebgehifafgbghafacgfdccgifdcbbbidfifhdaibgigebigaedeaaiadegfefbhacgddhchgcbgcaeaieiegiffchbgbebgbehbbfcebciiagacaiechdigbgbghefcahgbhfibhedaeeiffebdiabcifgccdefabccdghehfibfiifdaicfedagahhdcbhbicdgibgcedieihcichadgchgbdcdagaihebbabhibcihicadgadfcihdheefbhffiageddhgahaidfdhhdbgciiaciegchiiebfbcbhaeagccfhbfhaddagnfieihghfbaggiffbbfbecgaiiidccdceadbbdfgigibgcgchafccdchgifdeieicbaididhfcfdedbhaadedfageigfdehgcdaecaebebebfcieaecfagfdieaefdiedbcadchabhebgehiidfcgahcdhcdhgchhiiheffiifeegcfdgbdeffhgeghdfhbfbifgidcafbfcd'
