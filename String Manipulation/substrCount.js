@@ -17,53 +17,59 @@
  */
 
 const substrCount = (s = '') => {
-	const o = {}
+	const subs = {}
 
-	// Get single characters
-	for (let i = 0; i < s.length; i++)
-		if (!o[s[i]]) o[s[i]] = 1
-		else o[s[i]]++
-
-	// Get substrings
 	for (let i = 0; i < s.length; i++) {
+		if (!subs[s[i]]) subs[s[i]] = 1
+		else subs[s[i]]++
+	}
+
+	for (let i = 0; i < s.length - 1; i++) {
 		for (let j = i + 1; j < s.length; j++) {
-			const sub = s.substr(i, j + 1)
-			if (sub !== '' && sub.length > 1) {
-				if (!o[sub]) o[sub] = 1
-				else o[sub]++
-			}
+			const sub = s.slice(i, j + 1)
+			if (allSame(sub) || allSameExceptMiddle(sub))
+				if (!subs[sub]) subs[sub] = 1
+				else subs[sub]++
 		}
 	}
 
-	for (let oc in o) {
-		if (oc.length > 1) {
-			if (!allSameExceptMiddle(oc)) o[oc] = 0
-		}
-	}
-
-	return Object.values(o).reduce((a, b) => a + b, 0)
-	// return o
+	return Object.values(subs).reduce(sum, 0)
+	// return subs
 }
 
-const allSame = (s = '') => (s.match(/^(.)\1+$/) ? true : false)
+const sum = (a = 0, b = 0) => a + b
+
+const allSame = (s = '') => /^(.)\1+$/.test(s)
 
 const allSameExceptMiddle = (s = '') => {
-	const isEvenLength = s.length % 2 === 0
-	if (isEvenLength && allSame(s)) return true
-	else if (!isEvenLength) {
-		const middleIndex = Math.floor(s.length / 2)
-		const splitted = [ ...s ]
-		splitted.splice(middleIndex, 1)
-		return allSame(splitted.join(''))
+	let middleIndex = Math.floor(s.length / 2)
+	if (s.length % 2 === 0) {
+		if (s.length === 2) return allSame(s)
+		if (!allSame(s))
+			return allSame(
+				s.substring(0, middleIndex - 1) +
+					s.substring(middleIndex + 1, s.length)
+			)
 	}
+
+	return allSame(
+		s.substring(0, middleIndex) + s.substring(middleIndex + 1, s.length)
+	)
 }
 
 console.log(substrCount('asasd')) // 7
 console.log(substrCount('abcbaba')) // 10
 console.log(substrCount('aaaa')) // 10
 console.log(substrCount('mnonopoo')) // 12
+
 console.log(
 	substrCount(
 		'ccacacabccacabaaaabbcbccbabcbbcaccabaababcbcacabcabacbbbccccabcbcabbaaaaabacbcbbbcababaabcbbaaababababbabcaabcaacacbbaccbbabbcbbcbacbacabaaaaccacbaabccabbacabaabaaaabbccbaaaabacabcacbbabbacbcbccbbbaaabaaacaabacccaacbcccaacbbcaabcbbccbccacbbcbcaaabbaababacccbacacbcbcbbccaacbbacbcbaaaacaccbcaaacbbcbbabaaacbaccaccbbabbcccbcbcbcbcabbccbacccbacabcaacbcaccabbacbbccccaabbacccaacbbbacbccbcaaaaaabaacaaabccbbcccaacbacbccaaacaacaaaacbbaaccacbcbaaaccaabcbccacaaccccacaacbcacccbcababcabacaabbcacccbacbbaaaccabbabaaccabbcbbcaabbcabaacabacbcabbaaabccabcacbcbabcbccbabcabbbcbacaaacaabbbabbaacbbacaccccabbabcbcabababbcbaaacbaacbacacbabbcacccbccbbbcbcabcabbbcaabbaccccabaabbcbcccabaacccccaaacbbbcbcacacbabaccccbcbabacaaaabcccaaccacbcbbcccaacccbbcaaaccccaabacabcabbccaababbcabccbcaccccbaaabbbcbabaccacaabcabcbacaccbaccbbaabccbbbccaccabccbabbbccbaabcaabcabcbbabccbaaccabaacbbaaaabcbcabaacacbcaabbaaabaaccacbaacababcbacbaacacccacaacbacbbaacbcbbbabccbababcbcccbccbcacccbababbcacaaaaacbabcabcacaccabaabcaaaacacbccccaaccbcbccaccacbcaaaba'
 	)
 ) // 1272919
+
+console.log(
+	substrCount(
+		'bacaacaaaabbbcaccabaacbbaacbcccbbbbacbaabcabcbaaccbcbbbcbcbbbbacbaccaacaaababbcaaaacbbcbbaabaaababaacaaccbbbaabcabccacbacbacccababbccbabbccbbbccbcabaabcaacbcabaacbcbababcacbbaaaaccbabaaabbbcbbacccacabcbacbbbcbcbacbacbaabcababcbcccbcbcacccabbbbcbaabcbaabbbcbbbacbccbcbcbbbbcccbcacaccacbaabbacacabcaacacbacabcabcbbbbcbaaacbabbccacacaabacabacaacbccbaaaabccccababbcbaabcccaababaccccbbcabbbaaaacabbacccacacbcabbbcbcbbcbabbaccccccbbaaabbbacbabacbbcaabbabacbbccccbacbccbbaabbccabaacabcabbabaaacccccaaabcbabbbccaccacccbaabcbabccbbcbabbcbcbbbccbcbcbbaabbabcaacbbcacccccacbbbcbbbcbbababaabbcaabbcccbacbabaaacbaacaaacbccaaabbaaaaaccccacbaabcbcbaacccbcccbcaacabbbabccaaabaaacacacaabccacaacbacbabbcabbbaccbabaaabccaacccaabcccbbcbacbccbbccacabbbabaababaacbaacbbbbaaabbabcabbacacabbabacaaacbcbacacccbacbbbabaabcacccbcabaaaccaaaacbaaabbcbbabcabccaaaaaabbbabacbcbcbaacacbccacbbbcbbbaaacccaaabbcaacbbbcbaaabbcbcbbabbbccbccacbbababcaccbbbabccccccbacacbbcbbabcbccacbaaccccbcaaaabccccabacbccbcbbcbcaacccabbbacabccbbacacbcbbcbbcbacbbcbbccc'
+	)
+) // 1583085
