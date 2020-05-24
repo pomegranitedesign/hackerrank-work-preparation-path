@@ -16,43 +16,37 @@
 // Both strings are equal length
 // Return the length of the longest string that is the child of s1 and s2
 const commonChild = (s1 = '', s2 = '') => {
-	const o1 = {}
-	const o2 = {}
+	const c1 = [ ...s1 ]
+	const c2 = [ ...s2 ]
 
-	// SLICE until the first match is found
-	let c1 = [ ...s1 ]
-	let c2 = [ ...s2 ]
-
-	let i = 0
-	let matchFound = false
-	while (!matchFound) {
-		if (c1[i] === c2[i]) matchFound = true
-		c1 = c1.slice(i)
-		c2 = c2.slice(i)
-		i++
+	let nCommon = 0
+	for (let i = 0; i < c1.length; i++) {
+		for (let j = 0; j < c2.length; j++) {
+			if ((c1[i] === c2[j]) & (c1[i] !== '_') && c2[j] !== '_') {
+				console.log(c1[i], c2[j], i, j, `i - j = ${Math.abs(i - j)}`)
+				c1[i] = '_'
+				c2[i] = '_'
+				nCommon++
+			}
+		}
 	}
 
-	console.log(c1, c2)
-
-	for (let i = 0; i < s1.length; i++) {
-		o1[s1[i]] = {}
-		o2[s2[i]] = {}
-
-		if (!o1[s1[i]].occured) {
-			o1[s1[i]].occured = 1
-			o1[s1[i]].index = i
-		} else o1[s1[i]].occured++
-
-		if (!o2[s2[i]].occured) {
-			o2[s2[i]].occured = 1
-			o2[s2[i]].index = i
-		} else o2[s2[i]].occured++
-	}
-
-	// return [ o1, o2 ]
+	return nCommon
 }
 
+// 0 1 2 3 4 5
+// A B C D E F
+
+// 0 1 2 3 4 5
+// F B D A M N
+
 console.log(commonChild('HARRY', 'SALLY')) // 2
-// console.log(commonChild('AA', 'BB')) // 0
+console.log(commonChild('AA', 'BB')) // 0
 console.log(commonChild('SHINCHAN', 'NOHARAAA')) // 3
-// console.log(commonChild('ABCDEF', 'FBDAMN')) // 2
+console.log(commonChild('ABCDEF', 'FBDAMN')) // 2
+console.log(
+	commonChild(
+		'WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS',
+		'FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC'
+	)
+) // 15
