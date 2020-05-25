@@ -13,32 +13,20 @@
  *  
  */
 
-// Both strings are equal length
-// Return the length of the longest string that is the child of s1 and s2
 const commonChild = (s1 = '', s2 = '') => {
-	const c1 = [ ...s1 ]
-	const c2 = [ ...s2 ]
-
-	let nCommon = 0
-	for (let i = 0; i < c1.length; i++) {
-		for (let j = 0; j < c2.length; j++) {
-			if ((c1[i] === c2[j]) & (c1[i] !== '_') && c2[j] !== '_') {
-				console.log(c1[i], c2[j], i, j, `i - j = ${Math.abs(i - j)}`)
-				c1[i] = '_'
-				c2[i] = '_'
-				nCommon++
-			}
+	const result = []
+	for (let i = 0; i <= s1.length; i++) {
+		result.push([])
+		for (let j = 0; j <= s2.length; j++) {
+			if (i === 0 || j === 0) result[i].push(0)
+			else if (s1[i - 1] === s2[j - 1])
+				result[i].push(1 + result[i - 1][j - 1])
+			else result[i].push(Math.max(result[i - 1][j], result[i][j - 1]))
 		}
 	}
-
-	return nCommon
+	console.log(result)
+	return result[s1.length][s2.length]
 }
-
-// 0 1 2 3 4 5
-// A B C D E F
-
-// 0 1 2 3 4 5
-// F B D A M N
 
 console.log(commonChild('HARRY', 'SALLY')) // 2
 console.log(commonChild('AA', 'BB')) // 0
