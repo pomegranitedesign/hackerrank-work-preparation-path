@@ -7,40 +7,38 @@
  */
 
 const dynamicArray = (N = 0, queries = []) => {
+	const seqList = []
 	let lastAnswer = 0
-	const S0 = []
-	const S1 = []
 
 	for (let i = 0; i < queries.length; i++) {
 		const [ queryType, x, y ] = queries[i]
-		let seq
+		const index = (x ^ lastAnswer) % N
 
 		if (queryType === 1) {
-			seq = (x ^ lastAnswer) % N
-			if (seq === 0) S0.push(y)
-			if (seq === 1) S1.push(y)
+			if (!seqList[index]) {
+				const newArr = []
+				newArr.push(y)
+				seqList[index] = newArr
+			} else seqList[index].push(y)
 		}
 
-		if (queryType === 2) {
-			seq = (x ^ lastAnswer) % N
-			if (seq === 0) lastAnswer = S0[y]
-			if (seq === 1) lastAnswer = S1[y]
-			console.log(lastAnswer)
-		}
+		if (queryType === 2)
+			console.log(
+				(lastAnswer = seqList[index][y % seqList[index].length])
+			)
 	}
-
-	return [ S0, S1 ]
+	return seqList
 }
 
-// console.log(
-// 	dynamicArray(2, [
-// 		[ 1, 0, 5 ],
-// 		[ 1, 1, 7 ],
-// 		[ 1, 0, 3 ],
-// 		[ 2, 1, 0 ],
-// 		[ 2, 1, 1 ]
-// 	])
-// )
+console.log(
+	dynamicArray(2, [
+		[ 1, 0, 5 ],
+		[ 1, 1, 7 ],
+		[ 1, 0, 3 ],
+		[ 2, 1, 0 ],
+		[ 2, 1, 1 ]
+	])
+)
 
 console.log(
 	dynamicArray(100, [
@@ -146,3 +144,25 @@ console.log(
 		[ 1, 527554061, 434103342 ]
 	])
 )
+/**
+	855677723
+	75865401
+	763845832
+	75865401
+	709571211
+	645102173
+	112869154
+	763845832
+	449768243
+	757848208
+	91038209
+	205970905
+	783321829
+	372160176
+	384358662
+	67467208
+	935143105
+	384358662
+	309720694
+	138234911
+*/

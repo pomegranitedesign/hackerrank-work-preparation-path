@@ -11,8 +11,8 @@
  */
 
 const rotLeft = (arr = [], d = 0) => {
-  for (let i = 0; i < d; i++) arr.push(arr.shift())
-  return arr
+	for (let i = 0; i < d; i++) arr.push(arr.shift())
+	return arr
 }
 
-console.log(rotLeft([1, 2, 3, 4, 5], 4))
+console.log(rotLeft([ 1, 2, 3, 4, 5 ], 4))

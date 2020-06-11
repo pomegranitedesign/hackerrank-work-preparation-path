@@ -1,8 +1,16 @@
+/**
+ *
+ * Author: Dmitriy Shin
+ * Date: June 11, 2020
+ * Program name: Sparse Arrays
+ *
+ */
+
 const matchingStrings = (strings = [], queries = []) => {
-	let counts = {}
+	const counts = []
+
 	for (let i = 0; i < queries.length; i++) {
-		if (strings.includes(queries[i]))
-			counts[queries[i]] = (counts[queries[i]] || 0) + 1
+		counts.push(strings.filter((string) => string === queries[i]).length)
 	}
 
 	return counts

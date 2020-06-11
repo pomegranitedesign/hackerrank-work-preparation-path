@@ -8,6 +8,10 @@
 
 public class swapNodes {
   public static int[][] swapNodes(int[][] indexes, int[] queries) {
+          
+  }
+
+  private static void printInOrder() {
     
   }
 }
