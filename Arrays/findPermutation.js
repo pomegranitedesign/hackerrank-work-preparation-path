@@ -11,25 +11,46 @@ const solve = (n, k) => {
 	for (let i = 1; i <= n; i++) arr.push(i)
 
 	const permutations = getPermutations(arr)
+	let maxMinDifference = -1
 	for (let i = 0; i < permutations.length; i++) {
 		const permutation = permutations[i]
 		let minDifference = getMinDifference(permutation)
+		if (minDifference > maxMinDifference) maxMinDifference = minDifference
 	}
 
-	return permutations
+	for (let permutation of permutations) {
+		const diff = Math.abs(permutation[0] - permutation[1])
+		if (diff === maxMinDifference) {
+			console.log(permutation)
+		}
+	}
+
+	// return permutations
 }
 
 const getMinDifference = (arr = []) => {
 	const length = arr.length
 	for (let i = 0; i < arr.length; i++) {
-		let middleIndex
+		let middleIndex = arr.length / 2,
+			minDifference,
+			left,
+			right
 		if (length % 2 === 0) {
-			middleIndex = arr.length / 2
-			const left = arr.slice(0, middleIndex)
-			const right = arr.slice(middleIndex)
-			console.log(left, right)
+			left = arr.slice(0, middleIndex)
+			right = arr.slice(middleIndex)
+			minDifference = Math.min(
+				Math.abs(left[0] - left[1]),
+				Math.abs(right[0] - right[1])
+			)
 		} else {
+			left = arr.slice(0, middleIndex + 1)
+			right = arr.slice(middleIndex)
+			minDifference = Math.min(
+				Math.abs(left[0] - left[1]),
+				Math.abs(right[0] - right[1])
+			)
 		}
+		return minDifference
 	}
 }
 
