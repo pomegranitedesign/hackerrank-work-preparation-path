@@ -53,7 +53,6 @@ def swap_nodes(indexes, queries):
         if right != -1:
             tree.insert(right)
     for query in queries:
-        # TODO Think of how to swap the nodes of tree
         pass
     tree.print_tree()
 
