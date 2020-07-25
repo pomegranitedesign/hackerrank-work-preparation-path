@@ -33,6 +33,7 @@ class Main {
 			if (area > maxArea)
 				maxArea = area;
 		}
-		return maxArea;
+
+		System.out.println(maxArea);
 	}
 }
